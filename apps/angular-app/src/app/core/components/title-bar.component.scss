@@ -1,0 +1,207 @@
+.title-bar {
+  height: 40px;
+//   background: var(--app-background);
+  background: linear-gradient(
+    135deg,
+    var(--app-background) 0%,
+    var(--app-surface) 100%
+  );
+  color: var(--app-text);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--app-border);
+  user-select: none;
+  position: relative;
+  z-index: 1000;
+}
+
+.title-bar.mac {
+//   background: var(--app-background);
+  background: linear-gradient(
+    135deg,
+    var(--app-surface) 0%,
+    var(--app-secondary) 100%
+  );
+  border-bottom: 1px solid var(--app-secondary);
+}
+
+.title-bar-drag-region {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  -webkit-app-region: drag;
+}
+
+/* macOS Layout */
+.mac-content {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 0 16px;
+}
+
+.traffic-light-spacer {
+  width: 78px;
+  flex-shrink: 0;
+}
+
+.title-section-mac {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  justify-content: center;
+}
+
+.status-section-mac {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+/* Windows/Linux Layout */
+.windows-content {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  padding: 0 12px;
+}
+
+.title-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.menu-section {
+  display: flex;
+  gap: 2px;
+  flex-shrink: 0;
+  -webkit-app-region: no-drag;
+}
+
+.status-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  font-size: 11px;
+}
+
+/* Common Elements */
+.app-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.app-title {
+  font-size: var(--app-font-size);
+  font-weight: var(--app-font-weight);
+  color: var(--app-text);
+  white-space: nowrap;
+}
+
+.menu-button {
+  background: none;
+  border: none;
+  color: var(--app-textSecondary);
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  white-space: nowrap;
+}
+
+.menu-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--app-text);
+}
+
+.api-status {
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 500;
+  background: var(--app-danger);
+  color: var(--app-text);
+  white-space: nowrap;
+}
+
+.api-status.online {
+  background: var(--app-success);
+}
+
+.connection-count {
+  color: var(--app-textSecondary);
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.separator {
+  color: var(--app-border);
+  margin: 0 4px;
+}
+
+/* Window Controls - Windows/Linux ONLY */
+.window-controls {
+  display: flex;
+  height: 100%;
+  flex-shrink: 0;
+}
+
+.control-button {
+  width: 46px;
+  height: 100%;
+  border: none;
+  background: none;
+  color: var(--app-textSecondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-app-region: no-drag;
+  transition: background-color 0.2s;
+}
+
+.control-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.control-button.close:hover {
+  background-color: var(--app-danger);
+  color: var(--app-text);
+}
+
+.control-button.minimize:hover,
+.control-button.maximize:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.control-button svg {
+  pointer-events: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .menu-section {
+    gap: 0;
+  }
+
+  .menu-button {
+    padding: 6px 8px;
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 900px) {
+  .status-section .connection-count,
+  .status-section .separator {
+    display: none;
+  }
+}

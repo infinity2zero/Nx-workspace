@@ -1,0 +1,147 @@
+// apps/angular-app/src/styles.scss
+@import 'bootstrap/scss/bootstrap';
+@import 'bootstrap-icons/font/bootstrap-icons.css';
+@import "~maplibre-gl/dist/maplibre-gl.css";
+@import 'ngx-toastr/toastr-bs5-alert';
+
+
+// CSS Variables for theming
+:root {
+  // Default theme (dark)
+  --app-primary: #0d6efd;
+  --app-secondary: #6c757d;
+  --app-background: #1e1e1e;
+  --app-surface: #2d2d2d;
+  --app-text: #ffffff;
+  --app-textSecondary: #cccccc;
+  --app-border: #404040;
+  --app-accent: #0d6efd;
+  --app-success: #198754;
+  --app-warning: #ffc107;
+  --app-danger: #dc3545;
+  --app-info: #0dcaf0;
+  
+  // Font settings
+  --app-font-size: 14px;
+  --app-font-weight: 400;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+}
+.app-content {
+  height: calc(100vh - 40px); // Subtract title bar height
+  overflow: auto;
+}
+
+
+// Base styles
+html {
+  font-size: var(--app-font-size);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto;
+  font-weight: var(--app-font-weight);
+}
+
+body {
+  background-color: var(--app-background);
+  color: var(--app-text);
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+// Bootstrap overrides - Remove all border radius
+* {
+  --bs-border-radius: 0 !important;
+  --bs-border-radius-sm: 0 !important;
+  --bs-border-radius-lg: 0 !important;
+  --bs-border-radius-xl: 0 !important;
+  --bs-border-radius-2xl: 0 !important;
+  --bs-border-radius-pill: 0 !important;
+}
+
+.btn {
+  border-radius: 0 !important;
+}
+
+.form-control,
+.form-select,
+.input-group-text {
+  border-radius: 0 !important;
+}
+
+.dropdown-menu {
+  border-radius: 0 !important;
+  background-color: var(--app-surface);
+  border-color: var(--app-border);
+}
+
+.dropdown-item {
+  color: var(--app-textSecondary);
+  
+  &:hover, &:focus {
+    background-color: var(--app-background);
+    color: var(--app-text);
+  }
+}
+
+.modal-content {
+  border-radius: 0 !important;
+  background-color: var(--app-surface);
+  border-color: var(--app-border);
+}
+
+.card {
+  border-radius: 0 !important;
+  background-color: var(--app-surface);
+  border-color: var(--app-border);
+}
+
+// Custom modal styles
+.appearance-modal {
+  .modal-dialog {
+    margin: 20px auto;
+    max-width: 350px;
+  }
+}
+
+// Compact mode
+.compact-mode {
+  --app-font-size: 12px;
+  
+  .btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+  }
+  
+  .form-control,
+  .form-select {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+  }
+  
+  .nav-link {
+    padding: 0.25rem 0.5rem;
+  }
+}
+
+// Scrollbar styling for dark themes
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--app-background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--app-border);
+  
+  &:hover {
+    background: var(--app-textSecondary);
+  }
+}

@@ -1,0 +1,195 @@
+// apps/angular-app/src/app/shared/components/appearance-popover/appearance-popover.component.scss
+.appearance-popover {
+  width: 320px;
+  background-color: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  font-size: var(--app-font-size);
+  font-weight: var(--app-font-weight);
+  z-index: 1050;
+
+  .popover-header {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--app-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+    .popover-title {
+      color: var(--app-text);
+      font-size: calc(var(--app-font-size) + 1px);
+      font-weight: 500;
+      margin: 0;
+    }
+
+    .btn-close-sm {
+      width: 20px;
+      height: 20px;
+      padding: 0;
+      background: none;
+      border: none;
+      color: var(--app-textSecondary);
+      cursor: pointer;
+      
+      &:hover {
+        color: var(--app-text);
+      }
+
+      &::before {
+        content: '✕';
+        font-size: 12px;
+      }
+    }
+  }
+
+  .popover-body {
+    padding: 16px;
+    max-height: fit-content;
+    overflow-y: hidden;
+  }
+
+  .popover-footer {
+    padding: 8px 16px;
+    border-top: 1px solid var(--app-border);
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .setting-group {
+    margin-bottom: 16px;
+
+    .setting-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: calc(var(--app-font-size) - 1px);
+      font-weight: 500;
+      color: var(--app-text);
+      margin-bottom: 6px;
+
+      .setting-value {
+        color: var(--app-textSecondary);
+        font-weight: var(--app-font-weight);
+      }
+    }
+
+    .form-select {
+      background-color: var(--app-background);
+      border-color: var(--app-border);
+      color: var(--app-text);
+      font-size: calc(var(--app-font-size) - 1px);
+
+      &:focus {
+        background-color: var(--app-background);
+        border-color: var(--app-primary);
+        color: var(--app-text);
+        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+      }
+
+      option {
+        background-color: var(--app-surface);
+        color: var(--app-text);
+      }
+    }
+
+    .slider-container {
+      .form-range {
+        background-color: transparent;
+
+        &::-webkit-slider-track {
+          background-color: var(--app-border);
+        }
+
+        &::-webkit-slider-thumb {
+          background-color: var(--app-primary);
+        }
+
+        &::-moz-range-track {
+          background-color: var(--app-border);
+        }
+
+        &::-moz-range-thumb {
+          background-color: var(--app-primary);
+          border: none;
+        }
+      }
+
+      .slider-labels {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 4px;
+
+        small {
+          color: var(--app-textSecondary);
+          font-size: calc(var(--app-font-size) - 3px);
+        }
+
+        .reset-btn {
+          color: var(--app-textSecondary);
+          padding: 2px;
+          font-size: calc(var(--app-font-size) - 3px);
+
+          &:hover {
+            color: var(--app-text);
+          }
+        }
+      }
+    }
+
+    .button-group {
+      display: flex;
+      gap: 4px;
+
+      .btn {
+        font-size: calc(var(--app-font-size) - 2px);
+        padding: 4px 8px;
+        border-color: var(--app-border);
+        color: var(--app-textSecondary);
+        background-color: var(--app-background);
+
+        &:hover {
+          border-color: var(--app-primary);
+          color: var(--app-text);
+          background-color: var(--app-surface);
+        }
+
+        &.active {
+          background-color: var(--app-primary);
+          border-color: var(--app-primary);
+          color: white;
+        }
+      }
+    }
+
+    .form-check {
+      .form-check-input {
+        background-color: var(--app-background);
+        border-color: var(--app-border);
+
+        &:checked {
+          background-color: var(--app-primary);
+          border-color: var(--app-primary);
+        }
+
+        &:focus {
+          box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+        }
+      }
+
+      .form-check-label {
+        color: var(--app-text);
+        font-size: calc(var(--app-font-size) - 1px);
+        font-weight: 500;
+      }
+
+      + small {
+        display: block;
+        margin-top: 4px;
+        font-size: calc(var(--app-font-size) - 2px);
+        color: var(--app-textSecondary);
+      }
+    }
+  }
+}

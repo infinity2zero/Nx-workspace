@@ -1,0 +1,258 @@
+.map-path-overlay {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  max-width: 320px;
+  
+  .card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    margin-bottom: 1rem;
+  }
+
+  // Control panel
+  .path-control-panel {
+    min-height: 200px;
+    max-height: 400px;
+    
+    .card-body {
+      overflow-y: auto;
+      max-height: 300px;
+    }
+  }
+
+  // Path list items
+  .path-item {
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-radius: 0.375rem;
+    
+    &:hover {
+      background-color: rgba(13, 110, 253, 0.1);
+      transform: translateX(2px);
+    }
+    
+    &.active {
+      background-color: rgba(13, 110, 253, 0.15);
+      border-color: #007bff;
+    }
+    
+    .path-color-indicator {
+      width: 4px;
+      height: 40px;
+      border-radius: 2px;
+      margin-right: 0.5rem;
+    }
+    
+    .path-color-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    
+    .path-info {
+      min-width: 0; // Allow text to wrap
+      
+      .fw-bold {
+        font-size: 0.9rem;
+      }
+      
+      .small {
+        font-size: 0.8rem;
+        color: #6c757d;
+      }
+    }
+    
+    .path-actions {
+      .btn-group-sm .btn {
+        padding: 0.125rem 0.375rem;
+        font-size: 0.75rem;
+      }
+    }
+  }
+
+  // Quick comparison table
+  .table-sm {
+    font-size: 0.875rem;
+    
+    th {
+      border-top: none;
+      font-weight: 600;
+      color: #495057;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+    }
+    
+    td {
+      padding: 0.25rem 0.5rem;
+      vertical-align: middle;
+    }
+  }
+
+  // Node details panel
+  .node-details-panel, .link-details-panel {
+    max-width: 280px;
+    
+    .card-body {
+      padding: 0.75rem;
+    }
+    
+    .node-info, .link-info {
+      h6 {
+        margin-bottom: 0.5rem;
+        color: #495057;
+        font-weight: 600;
+      }
+      
+      .row {
+        margin-bottom: 0.5rem;
+        
+        &:last-child {
+          margin-bottom: 0;
+        }
+        
+        .col {
+          text-align: center;
+          
+          .fw-bold {
+            font-size: 0.9rem;
+            color: #495057;
+          }
+          
+          small {
+            font-size: 0.75rem;
+            color: #6c757d;
+            display: block;
+            margin-top: 0.125rem;
+          }
+        }
+      }
+    }
+    
+    .badge {
+      font-size: 0.75rem;
+      padding: 0.25rem 0.5rem;
+    }
+  }
+
+  // Link endpoints visualization
+  .link-endpoints {
+    .badge {
+      font-size: 0.75rem;
+      font-family: 'Monaco', 'Consolas', monospace;
+    }
+    
+    .fa-arrow-right {
+      font-size: 0.75rem;
+      color: #6c757d;
+    }
+  }
+
+  // Statistics display
+  .node-stats, .link-stats {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 0.375rem;
+    padding: 0.5rem;
+    margin-top: 0.5rem;
+    
+    .fw-bold {
+      color: #495057;
+      font-size: 0.9rem;
+    }
+    
+    small {
+      color: #6c757d;
+      font-size: 0.75rem;
+    }
+  }
+
+  // Responsive behavior
+  @media (max-width: 1199.98px) {
+    max-width: 280px;
+    top: 10px;
+    right: 10px;
+  }
+
+  @media (max-width: 991.98px) {
+    position: relative;
+    top: 0;
+    right: 0;
+    max-width: 100%;
+    margin: 1rem 0;
+    
+    .card {
+      background: white;
+      backdrop-filter: none;
+    }
+  }
+
+  @media (max-width: 575.98px) {
+    .path-item {
+      .path-info {
+        .fw-bold {
+          font-size: 0.85rem;
+        }
+        
+        .small {
+          font-size: 0.75rem;
+        }
+      }
+      
+      .path-actions .btn {
+        padding: 0.125rem 0.25rem;
+      }
+    }
+    
+    .node-details-panel, .link-details-panel {
+      max-width: 100%;
+    }
+  }
+}
+
+// Animation for panel appearance
+.map-path-overlay .card {
+  animation: slideInRight 0.3s ease-out;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+// Hover effects for interactive elements
+.path-control-panel .btn:hover,
+.node-details-panel .btn:hover,
+.link-details-panel .btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+// Custom scrollbar for path list
+.path-control-panel .card-body::-webkit-scrollbar {
+  width: 4px;
+}
+
+.path-control-panel .card-body::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 2px;
+}
+
+.path-control-panel .card-body::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 2px;
+}
+
+.path-control-panel .card-body::-webkit-scrollbar-thumb:hover {
+  background: #a1a1a1;
+}

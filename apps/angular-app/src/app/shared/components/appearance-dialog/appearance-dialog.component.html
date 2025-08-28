@@ -1,0 +1,108 @@
+<!-- apps/angular-app/src/app/shared/components/appearance-dialog/appearance-dialog.component.html -->
+<div class="appearance-dialog">
+  <div class="modal-header">
+    <h5 class="modal-title d-flex align-items-center">
+      <i class="bi bi-palette me-2"></i>
+      Appearance
+    </h5>
+    <button type="button" 
+            class="btn-close btn-close-white" 
+            (click)="close()"
+            aria-label="Close"></button>
+  </div>
+
+  <div class="modal-body">
+    <!-- Theme Selector -->
+    <div class="setting-group">
+      <label class="setting-label">Theme</label>
+      <select class="form-select form-select-sm" 
+              [(ngModel)]="settings.theme" 
+              (ngModelChange)="onThemeChange()">
+        <option *ngFor="let theme of themes" [value]="theme.name">
+          {{ theme.displayName }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Font Size -->
+    <div class="setting-group">
+      <label class="setting-label">
+        Font Size
+        <span class="setting-value">{{ settings.fontSize }}px</span>
+      </label>
+      <div class="slider-container">
+        <input type="range" 
+               class="form-range" 
+               min="10" 
+               max="20" 
+               step="1"
+               [(ngModel)]="settings.fontSize"
+               (ngModelChange)="onFontSizeChange()">
+        <div class="slider-labels">
+          <small>10px</small>
+          <button class="btn btn-link btn-sm reset-btn" 
+                  (click)="settings.fontSize = 14; onFontSizeChange()">
+            <i class="bi bi-arrow-clockwise"></i>
+          </button>
+          <small>20px</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Font Weight -->
+    <div class="setting-group">
+      <label class="setting-label">Font Weight</label>
+      <div class="button-group">
+        <button *ngFor="let weight of fontWeights"
+                type="button"
+                class="btn btn-outline-secondary btn-sm"
+                [class.active]="settings.fontWeight === weight.value"
+                (click)="setFontWeight(weight.value)">
+          {{ weight.label }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Message Style -->
+    <div class="setting-group">
+      <label class="setting-label">Message Style</label>
+      <div class="button-group">
+        <button *ngFor="let style of messageStyles"
+                type="button"
+                class="btn btn-outline-secondary btn-sm"
+                [class.active]="settings.messageStyle === style.value"
+                (click)="setMessageStyle(style.value)">
+          {{ style.label }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Compact Mode -->
+    <div class="setting-group">
+      <div class="form-check form-switch">
+        <input class="form-check-input" 
+               type="checkbox" 
+               id="compactMode"
+               [(ngModel)]="settings.compactMode"
+               (ngModelChange)="onCompactModeChange()">
+        <label class="form-check-label" for="compactMode">
+          Compact Mode
+        </label>
+      </div>
+      <small class="text-muted">Reduce spacing and padding throughout the interface</small>
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" 
+            class="btn btn-outline-secondary btn-sm" 
+            (click)="resetToDefaults()">
+      Reset to Defaults
+    </button>
+    <button type="button" 
+            class="btn btn-primary btn-sm" 
+            (click)="close()">
+      Done
+    </button>
+  </div>
+</div>

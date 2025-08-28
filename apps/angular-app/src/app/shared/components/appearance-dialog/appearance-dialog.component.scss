@@ -1,0 +1,162 @@
+// apps/angular-app/src/app/shared/components/appearance-dialog/appearance-dialog.component.scss
+.appearance-dialog {
+  .modal-header {
+    background-color: var(--app-surface);
+    border-bottom: 1px solid var(--app-border);
+    
+    .modal-title {
+      color: var(--app-text);
+      font-size: 14px;
+      font-weight: 500;
+    }
+  }
+
+  .modal-body {
+    background-color: var(--app-surface);
+    padding: 20px;
+    max-height: 400px;
+    overflow-y: auto;
+  }
+
+  .modal-footer {
+    background-color: var(--app-surface);
+    border-top: 1px solid var(--app-border);
+    padding: 12px 20px;
+  }
+
+  .setting-group {
+    margin-bottom: 20px;
+
+    .setting-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--app-text);
+      margin-bottom: 8px;
+
+      .setting-value {
+        color: var(--app-textSecondary);
+        font-weight: 400;
+      }
+    }
+
+    .form-select {
+      background-color: var(--app-background);
+      border-color: var(--app-border);
+      color: var(--app-text);
+      font-size: 12px;
+
+      &:focus {
+        background-color: var(--app-background);
+        border-color: var(--app-primary);
+        color: var(--app-text);
+        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+      }
+
+      option {
+        background-color: var(--app-surface);
+        color: var(--app-text);
+      }
+    }
+
+    .slider-container {
+      .form-range {
+        background-color: transparent;
+
+        &::-webkit-slider-track {
+          background-color: var(--app-border);
+        }
+
+        &::-webkit-slider-thumb {
+          background-color: var(--app-primary);
+        }
+
+        &::-moz-range-track {
+          background-color: var(--app-border);
+        }
+
+        &::-moz-range-thumb {
+          background-color: var(--app-primary);
+          border: none;
+        }
+      }
+
+      .slider-labels {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 4px;
+
+        small {
+          color: var(--app-textSecondary);
+          font-size: 10px;
+        }
+
+        .reset-btn {
+          color: var(--app-textSecondary);
+          padding: 2px;
+          font-size: 10px;
+
+          &:hover {
+            color: var(--app-text);
+          }
+        }
+      }
+    }
+
+    .button-group {
+      display: flex;
+      gap: 4px;
+
+      .btn {
+        font-size: 11px;
+        padding: 4px 12px;
+        border-color: var(--app-border);
+        color: var(--app-textSecondary);
+        background-color: var(--app-background);
+
+        &:hover {
+          border-color: var(--app-primary);
+          color: var(--app-text);
+          background-color: var(--app-surface);
+        }
+
+        &.active {
+          background-color: var(--app-primary);
+          border-color: var(--app-primary);
+          color: white;
+        }
+      }
+    }
+
+    .form-check {
+      .form-check-input {
+        background-color: var(--app-background);
+        border-color: var(--app-border);
+
+        &:checked {
+          background-color: var(--app-primary);
+          border-color: var(--app-primary);
+        }
+
+        &:focus {
+          box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+        }
+      }
+
+      .form-check-label {
+        color: var(--app-text);
+        font-size: 12px;
+        font-weight: 500;
+      }
+
+      + small {
+        display: block;
+        margin-top: 4px;
+        font-size: 11px;
+      }
+    }
+  }
+}

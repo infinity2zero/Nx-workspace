@@ -1,0 +1,222 @@
+<!-- apps/angular-app/src/app/dashboard/dashboard.component.html -->
+
+<div class="dashboard-container">
+  <!-- Header Section -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="dashboard-title">ISP Network Dashboard</h1>
+      <p class="text-muted mb-0">
+        Real-time network analytics and monitoring
+        <span class="ms-2">
+          <i class="bi bi-circle-fill" 
+             [class.text-success]="apiStatus === 'online'"
+             [class.text-danger]="apiStatus === 'offline'"></i>
+          {{ apiStatus | titlecase }}
+        </span>
+      </p>
+    </div>
+    <div class="d-flex align-items-center gap-3">
+      <small class="text-muted">Last updated: {{ lastUpdated | date:'short' }}</small>
+      <button class="btn btn-outline-primary btn-sm" 
+              (click)="refreshData()" 
+              [disabled]="isLoading">
+        <i class="bi bi-arrow-clockwise" [class.spin]="isLoading"></i>
+        Refresh
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading Overlay -->
+  <div *ngIf="isLoading" class="loading-overlay">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+    <!-- Summary Cards Section -->
+<div class="row g-4 mb-5">
+  <div class="col-12 col-sm-6 col-lg-3" *ngFor="let metric of [
+      { value: overview.totalCountries.cnt, label: 'Countries', icon: 'bi-globe2', bg: 'info' },
+      { value: overview.totalCities.cnt,    label: 'Cities',    icon: 'bi-building', bg: 'success' },
+      { value: overview.totalSites.cnt,     label: 'Network Sites', icon: 'bi-router', bg: 'danger' },
+      { value: overview.totalLinks.cnt,     label: 'Network Links', icon: 'bi-diagram-3', bg: 'warning' }
+    ]">
+    <div class="card text-white bg-{{ metric.bg }} h-100">
+      <div class="card-body d-flex justify-content-between align-items-center p-4">
+        <div>
+          <h3 class="card-title mb-1">{{ metric.value }}</h3>
+          <p class="card-text mb-0">{{ metric.label }}</p>
+        </div>
+        <i class="bi {{ metric.icon }} fs-1 opacity-50"></i>
+      </div>
+      <div class="card-footer bg-transparent border-top-0 text-white-50 px-4 py-2">
+        More info <i class="bi bi-arrow-right-circle-fill"></i>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- Charts Section -->
+  <div class="row g-4 mb-5">
+    <!-- Country Distribution -->
+    <div class="col-12 col-lg-6">
+      <div class="chart-card">
+        <div class="chart-header">
+          <h5 class="chart-title">
+            <i class="bi bi-pie-chart-fill me-2"></i>
+            Sites by Country
+          </h5>
+          <span class="badge bg-secondary">Top 10</span>
+        </div>
+        <div class="chart-container">
+          <canvas baseChart
+                  [data]="countryChartData"
+                  [options]="pieChartOptions"
+                  [type]="pieChartType">
+          </canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Network Type Distribution -->
+    <div class="col-12 col-lg-6">
+      <div class="chart-card">
+        <div class="chart-header">
+          <h5 class="chart-title">
+            <i class="bi bi-diagram-2-fill me-2"></i>
+            Network Types
+          </h5>
+        </div>
+        <div class="chart-container">
+          <canvas baseChart
+                  [data]="networkChartData"
+                  [options]="pieChartOptions"
+                  [type]="pieChartType">
+          </canvas>
+        </div>
+      </div>
+    </div>
+
+  <!-- Platform Distribution Table -->
+  <div class="row mt-4">
+    <div class="col-12">
+      <div class="chart-card">
+        <div class="chart-header">
+          <h5 class="chart-title">
+            <i class="bi bi-cpu-fill me-2"></i>
+            Platform Distribution
+          </h5>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Platform</th>
+                <th>Sites</th>
+                <th>Percentage</th>
+                <th>Trend</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let platform of platformDistribution; let i = index">
+                <td>
+                  <i class="bi bi-cpu me-2"></i>
+                  {{ platform.label }}
+                </td>
+                <td>{{ platform.count }}</td>
+                <td>
+                  {{ ((platform.count / overview.totalSites.cnt) * 100).toFixed(1) }}%
+                </td>
+                <td>
+                  <i class="bi bi-graph-up text-success" *ngIf="i < 3"></i>
+                  <i class="bi bi-dash text-warning" *ngIf="i >= 3 && i < 6"></i>
+                  <i class="bi bi-graph-down text-danger" *ngIf="i >= 6"></i>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Time Series -->
+    <div class="col-12">
+      <div class="chart-card">
+        <div class="chart-header">
+          <h5 class="chart-title">
+            <i class="bi bi-graph-up me-2"></i>
+            Site Growth Trend
+          </h5>
+          <span class="badge bg-success">Monthly</span>
+        </div>
+        <div class="chart-container chart-container-large">
+          <canvas baseChart
+                  [data]="timeSeriesChartData"
+                  [options]="chartOptions"
+                  [type]="lineChartType">
+          </canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+</div>
+
+  <!-- Advanced Visualizations -->
+  <!-- <div class="row g-4">
+    <div class="col-12 col-xl-8">
+      <div class="visualization-card">
+        <div class="chart-header">
+          <h5 class="chart-title">
+            <i class="bi bi-diagram-3-fill me-2"></i>
+            Network Topology
+          </h5>
+          <div class="chart-controls">
+            <button class="btn btn-sm btn-outline-primary me-2">
+              <i class="bi bi-fullscreen"></i>
+            </button>
+            <button class="btn btn-sm btn-outline-primary">
+              <i class="bi bi-gear"></i>
+            </button>
+          </div>
+        </div>
+        <div class="network-container" #networkCanvas>
+          <div class="placeholder-content">
+            <i class="bi bi-diagram-3 placeholder-icon"></i>
+            <h6>Network Topology Visualization</h6>
+            <p class="text-muted">Interactive network graph will be implemented with Cytoscape.js</p>
+            <button class="btn btn-primary" (click)="initializeNetworkTopology()">
+              Initialize Network View
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-xl-4">
+      <div class="visualization-card">
+        <div class="chart-header">
+          <h5 class="chart-title">
+            <i class="bi bi-geo-alt-fill me-2"></i>
+            Geographic Distribution
+          </h5>
+          <button class="btn btn-sm btn-outline-primary">
+            <i class="bi bi-arrows-fullscreen"></i>
+          </button>
+        </div>
+        <div class="map-container" #mapContainer>
+          <div class="placeholder-content">
+            <i class="bi bi-map placeholder-icon"></i>
+            <h6>Geographic Map</h6>
+            <p class="text-muted">Interactive map with PBF tiles using MapLibre GL JS</p>
+            <button class="btn btn-primary" (click)="initializeGeoMap()">
+              Initialize Map
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> -->
+
+  

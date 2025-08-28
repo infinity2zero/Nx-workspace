@@ -1,0 +1,67 @@
+<div class="title-bar" [class.mac]="isMac" [class.windows]="!isMac">
+    <div class="title-bar-drag-region">
+        <!-- macOS: Traffic lights space + title -->
+        <div class="mac-content" *ngIf="isMac">
+            <div class="traffic-light-spacer"></div>
+            <div class="title-section-mac">
+                <img src="assets/icons/app-icon.png" alt="ISP Network" class="app-icon">
+                <span class="app-title">ISP Network Management</span>
+            </div>
+            <div class="status-section-mac">
+                <span class="api-status" [class.online]="apiOnline">
+                    {{ apiOnline ? '● Online' : '● Offline' }}
+                </span>
+            </div>
+        </div>
+
+        <!-- Windows/Linux: Full custom controls -->
+        <div class="windows-content" *ngIf="!isMac">
+            <div class="title-section">
+                <img src="assets/icons/app-icon.png" alt="ISP Network" class="app-icon">
+                <!-- <span class="app-title">ISP Network Management</span> -->
+            </div>
+
+            <div class="menu-section">
+                <button class="menu-button" (click)="showMenu('file')">File</button>
+                <button class="menu-button" (click)="showMenu('view')">View</button>
+                <button class="menu-button" (click)="showMenu('network')">Network</button>
+                <button class="menu-button" (click)="showMenu('tools')">Tools</button>
+                <button class="menu-button" (click)="showMenu('help')">Help</button>
+            </div>
+
+            <div class="status-section">
+                <span class="api-status" [class.online]="apiOnline">
+                    {{ apiOnline ? '🟢 API Online' : '🔴 API Offline' }}
+                </span>
+                <span class="separator">|</span>
+                <span class="connection-count">{{connectedSites}} Sites</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ⭐ Window Controls ONLY for Windows/Linux -->
+    <div class="window-controls" *ngIf="!isMac">
+        <button class="control-button minimize" (click)="minimizeWindow()" title="Minimize">
+            <svg width="10" height="10" viewBox="0 0 10 10">
+                <path d="M0,5 L10,5" stroke="currentColor" stroke-width="1" />
+            </svg>
+        </button>
+
+        <button class="control-button maximize" (click)="toggleMaximize()"
+            [title]="isMaximized ? 'Restore Down' : 'Maximize'">
+            <svg width="10" height="10" viewBox="0 0 10 10" *ngIf="!isMaximized">
+                <path d="M0,1 L9,1 L9,10 L0,10 Z" stroke="currentColor" stroke-width="1" fill="none" />
+            </svg>
+            <svg width="10" height="10" viewBox="0 0 10 10" *ngIf="isMaximized">
+                <path d="M2,0 L10,0 L10,8 L8,8 M0,2 L8,2 L8,10 L0,10 Z" stroke="currentColor" stroke-width="1"
+                    fill="none" />
+            </svg>
+        </button>
+
+        <button class="control-button close" (click)="closeWindow()" title="Close">
+            <svg width="10" height="10" viewBox="0 0 10 10">
+                <path d="M0,0 L10,10 M10,0 L0,10" stroke="currentColor" stroke-width="1" />
+            </svg>
+        </button>
+    </div>
+</div>

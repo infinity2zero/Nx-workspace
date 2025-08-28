@@ -1,0 +1,33 @@
+/* Styles for the map container and controls.
+  It's important that the .map-container has a defined height,
+  otherwise the map will not be visible.
+*/
+.map-wrapper {
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: 12px;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+.map-container {
+  width: 100%;
+  height: 100%; /* You can adjust this height as needed */
+}
+
+/* Optional: Style the map controls to match your app's theme */
+:host ::ng-deep .maplibregl-ctrl button {
+  background-color: var(--app-surface, #fff);
+  color: var(--app-text, #333);
+  border-color: var(--app-border, #ccc);
+}
+
+:host ::ng-deep .maplibregl-ctrl button:hover {
+  background-color: var(--app-background, #f0f0f0);
+}
+
+:host ::ng-deep .maplibregl-ctrl-attrib {
+  background: rgba(0, 0, 0, 0.5);
+  color: var(--app-textSecondary, #fff);
+}

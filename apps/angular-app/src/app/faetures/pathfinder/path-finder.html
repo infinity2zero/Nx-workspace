@@ -1,0 +1,462 @@
+<div class="path-finder-container">
+    <!-- Header -->
+    <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">
+                <i class="fas fa-route text-primary me-2"></i>
+                Network Path Finder
+            </h4>
+            <div class="btn-group" role="group">
+                <button class="btn btn-outline-secondary btn-sm" (click)="toggleFilters()" [class.active]="showFilters">
+                    <i class="fas fa-filter"></i> Filters
+                </button>
+                <button class="btn btn-outline-info btn-sm" (click)="clearAll()">
+                    <i class="fas fa-eraser"></i> Clear
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Left Panel - Controls -->
+        <div class="col-lg-4 col-xl-3">
+            <!-- Route Selection -->
+            <div class="card mb-3">
+                <div class="card-body">
+                    <form [formGroup]="pathForm" (ngSubmit)="findPath()">
+                        <!-- Source Selection -->
+                        <div class="mb-3">
+                            <label class="form-label">
+                                <i class="fas fa-play text-success me-1"></i>
+                                Source Site
+                            </label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" formControlName="source"
+                                    placeholder="Enter source site ID"
+                                    [class.is-invalid]="pathForm.get('source')?.invalid && pathForm.get('source')?.touched"
+                                    (input)="onSourceInput($event)">
+                                <button class="btn btn-outline-secondary" type="button"
+                                    (click)="openSiteSelector('source')" [disabled]="loading">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                            <div class="form-text" *ngIf="sourceNode">
+                                {{ sourceNode.site_name }} ({{ sourceNode.city }}, {{ sourceNode.country }})
+                            </div>
+                        </div>
+
+                        <!-- Destination Selection -->
+                        <div class="mb-3">
+                            <label class="form-label">
+                                <i class="fas fa-stop text-danger me-1"></i>
+                                Destination Site
+                            </label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" formControlName="destination"
+                                    placeholder="Enter destination site ID"
+                                    [class.is-invalid]="pathForm.get('destination')?.invalid && pathForm.get('destination')?.touched"
+                                    (input)="onDestinationInput($event)">
+                                <button class="btn btn-outline-secondary" type="button"
+                                    (click)="openSiteSelector('destination')" [disabled]="loading">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                            <div class="form-text" *ngIf="destinationNode">
+                                {{ destinationNode.site_name }} ({{ destinationNode.city }}, {{ destinationNode.country
+                                }})
+                            </div>
+                        </div>
+
+                        <!-- Algorithm Selection -->
+                        <div class="mb-3">
+                            <label class="form-label">
+                                <i class="fas fa-cogs text-info me-1"></i>
+                                Algorithm
+                            </label>
+                            <select class="form-select" formControlName="algorithm">
+                                <option value="dijkstra">Dijkstra (Shortest Path)</option>
+                                <option value="astar">A* (Heuristic Search)</option>
+                                <option value="k-shortest">K-Shortest Paths</option>
+                                <option value="disjoint">Disjoint Paths</option>
+                            </select>
+                        </div>
+
+                        <!-- Algorithm Options -->
+                        <div class="mb-3" *ngIf="selectedAlgorithm === 'k-shortest'">
+                            <label class="form-label">Number of Paths (K)</label>
+                            <input type="number" class="form-control" formControlName="kValue" min="1" max="10"
+                                value="3">
+                        </div>
+
+                        <div class="mb-3" *ngIf="selectedAlgorithm === 'disjoint'">
+                            <label class="form-label">Disjoint Type</label>
+                            <select class="form-select" formControlName="disjointType">
+                                <option value="node-disjoint">Node Disjoint</option>
+                                <option value="edge-disjoint">Edge Disjoint</option>
+                                <option value="link-disjoint">Link Disjoint</option>
+                            </select>
+                        </div>
+
+                        <!-- QoS Requirements -->
+                        <div class="mb-3" [ngClass]="{'d-none': !showQoS}">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <label class="form-label mb-0">
+                                    <i class="fas fa-tachometer-alt text-warning me-1"></i>
+                                    QoS Requirements
+                                </label>
+                                <button type="button" class="btn btn-sm btn-outline-warning" (click)="toggleQoS()">
+                                    <i class="fas" [class.fa-chevron-up]="showQoS"
+                                        [class.fa-chevron-down]="!showQoS"></i>
+                                </button>
+                            </div>
+
+                            <div [ngbCollapse]="!showQoS">
+                                <div class="row g-2">
+                                    <div class="col-6">
+                                        <label class="form-label form-label-sm">Max Latency (ms)</label>
+                                        <input type="number" class="form-control form-control-sm"
+                                            formControlName="maxLatency" placeholder="e.g., 100">
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label form-label-sm">Min Bandwidth (Mbps)</label>
+                                        <input type="number" class="form-control form-control-sm"
+                                            formControlName="minBandwidth" placeholder="e.g., 1000">
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label form-label-sm">Priority</label>
+                                        <select class="form-select form-select-sm" formControlName="priority">
+                                            <option value="low">Low</option>
+                                            <option value="medium">Medium</option>
+                                            <option value="high">High</option>
+                                            <option value="critical">Critical</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary" [disabled]="pathForm.invalid || loading">
+                                <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+                                <i class="fas fa-search me-1" *ngIf="!loading"></i>
+                                {{ loading ? 'Finding Path...' : 'Find Path' }}
+                            </button>
+
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-outline-success btn-sm"
+                                    (click)="findAdvancedPaths()" [disabled]="pathForm.invalid || loading">
+                                    <i class="fas fa-magic me-1"></i>
+                                    Advanced
+                                </button>
+                                <button type="button" class="btn btn-outline-info btn-sm" (click)="toggleQoS()">
+                                    <i class="fas fa-sliders-h me-1"></i>
+                                    QoS
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Filters Panel -->
+            <div [ngbCollapse]="!showFilters">
+                <app-filter-panel [filters]="currentFilters" (filtersChange)="onFiltersChange($event)">
+                </app-filter-panel>
+            </div>
+
+            <!-- Performance Stats -->
+            <div class="card mb-3" *ngIf="lastPerformance">
+                <div class="card-body">
+                    <h6 class="card-title">
+                        <i class="fas fa-chart-line text-success me-1"></i>
+                        Performance
+                    </h6>
+                    <div class="small">
+                        <div class="d-flex justify-content-between">
+                            <span>Execution Time:</span>
+                            <span class="text-muted">{{ lastPerformance.executionTime }}ms</span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span>Cache Hit:</span>
+                            <span [class]="lastPerformance.cacheHit ? 'text-success' : 'text-warning'">
+                                {{ lastPerformance.cacheHit ? 'Yes' : 'No' }}
+                            </span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span>Paths Found:</span>
+                            <span class="text-info">{{ pathResults.length }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel - Results -->
+        <div class="col-lg-8 col-xl-9">
+            <!-- Results Header -->
+            <div class="d-flex justify-content-between align-items-center mb-3" *ngIf="pathResults.length > 0">
+                <h5 class="mb-0">
+                    <i class="fas fa-list text-primary me-2"></i>
+                    Path Results ({{ pathResults.length }})
+                </h5>
+                <div class="btn-group btn-group-sm">
+                    <button class="btn btn-outline-secondary" [class.active]="viewMode === 'list'"
+                        (click)="setViewMode('list')">
+                        <i class="fas fa-list"></i>
+                    </button>
+                    <button class="btn btn-outline-secondary" [class.active]="viewMode === 'cards'"
+                        (click)="setViewMode('cards')">
+                        <i class="fas fa-th-large"></i>
+                    </button>
+                    <button class="btn btn-outline-secondary" [class.active]="viewMode === 'comparison'"
+                        (click)="setViewMode('comparison')">
+                        <i class="fas fa-balance-scale"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Empty State -->
+            <div class="text-center py-5" *ngIf="pathResults.length === 0 && !loading">
+                <i class="fas fa-route text-muted fa-3x mb-3"></i>
+                <h5 class="text-muted">No Paths Found</h5>
+                <p class="text-muted mb-0">
+                    Select source and destination sites and click "Find Path" to get started.
+                </p>
+            </div>
+
+            <!-- Loading State -->
+            <div class="text-center py-5" *ngIf="loading">
+                <div class="spinner-border text-primary mb-3"></div>
+                <h5>Finding Optimal Paths...</h5>
+                <p class="text-muted mb-0">Analyzing network topology and computing routes.</p>
+            </div>
+
+            <!-- Results List View -->
+            <div *ngIf="pathResults.length > 0 && viewMode === 'list'">
+                <div class="card mb-3" *ngFor="let path of pathResults; trackBy: trackByPath; let i = index">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>Path {{ i + 1 }}</strong>
+                            <span class="badge bg-primary ms-2">{{ path.metadata.algorithm }}</span>
+                            <span class="badge bg-success ms-1" *ngIf="path.metadata.qosScore">
+                                QoS: {{ (path.metadata.qosScore * 100).toFixed(1) }}%
+                            </span>
+                        </div>
+                        <div class="btn-group btn-group-sm">
+                            <button class="btn btn-outline-primary" (click)="showOnMap(path)"
+                                [disabled]="!canShowOnMap">
+                                <i class="fas fa-map"></i>
+                            </button>
+                            <button class="btn btn-outline-info" (click)="showPathDetails(path)">
+                                <i class="fas fa-info-circle"></i>
+                            </button>
+                            <button class="btn btn-outline-success" (click)="exportPath(path)">
+                                <i class="fas fa-download"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-3">
+                                <div class="text-center border-end">
+                                    <div class="h5 text-primary mb-1">{{ path.distance.toFixed(2) }}</div>
+                                    <small class="text-muted">Distance (km)</small>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="text-center border-end">
+                                    <div class="h5 text-success mb-1">{{ path.metadata.hopCount }}</div>
+                                    <small class="text-muted">Hops</small>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="text-center border-end">
+                                    <div class="h5 text-info mb-1">{{ path.cost.toFixed(2) }}</div>
+                                    <small class="text-muted">Cost</small>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="text-center">
+                                    <div class="h5 mb-1"
+                                        [ngClass]="getResilienceClass(path.metadata.riskAssessment?.resilienceRating)">
+                                        {{ path.metadata.riskAssessment?.resilienceRating || 'N/A' }}
+                                    </div>
+                                    <small class="text-muted">Resilience</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Path Details -->
+                        <div class="mt-3" *ngIf="expandedPaths.has(path)">
+                            <h6>Route Details</h6>
+                            <div class="d-flex flex-wrap gap-1">
+                                <span *ngFor="let node of path.nodes; trackBy: trackByNode; let last = last"
+                                    class="badge bg-light text-dark border">
+                                    {{ node.site_name }}
+                                    <i class="fas fa-arrow-right ms-1 text-muted" *ngIf="!last"></i>
+                                </span>
+                            </div>
+
+                            <h6 class="mt-3">Link Analysis</h6>
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Link</th>
+                                            <th>Type</th>
+                                            <th>Distance</th>
+                                            <th>Capacity</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let link of path.links; trackBy: trackByLink">
+                                            <td>{{ link.link_id }}</td>
+                                            <td>
+                                                <span class="badge" [ngClass]="getLinkTypeClass(link.link_type)">
+                                                    {{ link.link_type }}
+                                                </span>
+                                            </td>
+                                            <td>{{ link.link_distance.toFixed(2) }} km</td>
+                                            <td>{{ getLinkCapacity(link) }} Mbps</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-footer">
+                        <button class="btn btn-sm btn-outline-secondary" (click)="togglePathExpansion(path)">
+                            <i class="fas" [class.fa-chevron-down]="!expandedPaths.has(path)"
+                                [class.fa-chevron-up]="expandedPaths.has(path)"></i>
+                            {{ expandedPaths.has(path) ? 'Hide' : 'Show' }} Details
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Cards View -->
+            <div class="row g-3" *ngIf="pathResults.length > 0 && viewMode === 'cards'">
+                <div class="col-lg-6 col-xl-4" *ngFor="let path of pathResults; trackBy: trackByPath; let i = index">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <strong>Path {{ i + 1 }}</strong>
+                                <span class="badge bg-primary">{{ path.metadata.algorithm }}</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-2 text-center mb-3">
+                                <div class="col-6">
+                                    <div class="h6 text-primary mb-0">{{ path.distance.toFixed(1) }}</div>
+                                    <small class="text-muted">Distance (km)</small>
+                                </div>
+                                <div class="col-6">
+                                    <div class="h6 text-success mb-0">{{ path.metadata.hopCount }}</div>
+                                    <small class="text-muted">Hops</small>
+                                </div>
+                            </div>
+
+                            <div class="progress mb-2" style="height: 6px;">
+                                <div class="progress-bar" [style.width.%]="(path.metadata.qosScore || 0) * 100"
+                                    [ngClass]="getQoSProgressClass(path.metadata.qosScore)">
+                                </div>
+                            </div>
+                            <small class="text-muted">
+                                QoS Score: {{ ((path.metadata.qosScore || 0) * 100).toFixed(1) }}%
+                            </small>
+                        </div>
+                        <div class="card-footer">
+                            <div class="btn-group w-100">
+                                <button class="btn btn-outline-primary btn-sm" (click)="showOnMap(path)">
+                                    <i class="fas fa-map"></i>
+                                </button>
+                                <button class="btn btn-outline-info btn-sm" (click)="showPathDetails(path)">
+                                    <i class="fas fa-info"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Comparison View -->
+            <div *ngIf="pathResults.length > 0 && viewMode === 'comparison'" class="card">
+                <div class="card-header">
+                    <h6 class="mb-0">Path Comparison</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Path</th>
+                                    <th>Algorithm</th>
+                                    <th>Distance</th>
+                                    <th>Hops</th>
+                                    <th>Cost</th>
+                                    <th>QoS</th>
+                                    <th>Resilience</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let path of pathResults; trackBy: trackByPath; let i = index">
+                                    <td>Path {{ i + 1 }}</td>
+                                    <td>
+                                        <span class="badge bg-primary">{{ path.metadata.algorithm }}</span>
+                                    </td>
+                                    <td>{{ path.distance.toFixed(2) }} km</td>
+                                    <td>{{ path.metadata.hopCount }}</td>
+                                    <td>{{ path.cost.toFixed(2) }}</td>
+                                    <td>
+                                        <div class="progress" style="height: 4px; width: 60px;">
+                                            <div class="progress-bar"
+                                                [style.width.%]="(path.metadata.qosScore || 0) * 100"
+                                                [ngClass]="getQoSProgressClass(path.metadata.qosScore)">
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="badge"
+                                            [ngClass]="getResilienceClass(path.metadata.riskAssessment?.resilienceRating)">
+                                            {{ path.metadata.riskAssessment?.resilienceRating || 'N/A' }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <button class="btn btn-outline-primary" (click)="showOnMap(path)">
+                                                <i class="fas fa-map"></i>
+                                            </button>
+                                            <button class="btn btn-outline-info" (click)="showPathDetails(path)">
+                                                <i class="fas fa-info"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Site Selector Modal -->
+<div class="modal fade" #siteModal tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Select {{ selectorTarget === 'source' ? 'Source' : 'Destination' }} Site</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Site search and selection would go here -->
+                <p>Site selector component would be implemented here</p>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,102 @@
+<!-- apps/angular-app/src/app/layout/shell.component.html -->
+<div class="lm-studio-layout">
+<app-title-bar></app-title-bar>
+  <!-- Top Bar -->
+  <header class="top-bar d-none1">
+    <div class="top-bar-left">
+      <span class="app-title">ISP Network Manager</span>
+    </div>
+    
+    <div class="top-bar-center">
+      <div class="dropdown">
+        <button class="btn btn-outline-secondary btn-sm dropdown-toggle model-selector" 
+                type="button" 
+                data-bs-toggle="dropdown">
+          <i class="bi bi-cpu me-2"></i>{{ currentModel }}
+        </button>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" (click)="onModelSelect('Network Graph Model')">Network Graph Model</a></li>
+          <li><a class="dropdown-item" (click)="onModelSelect('Route Analysis Model')">Route Analysis Model</a></li>
+          <li><a class="dropdown-item" (click)="onModelSelect('Site Management Model')">Site Management Model</a></li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="top-bar-right">
+      <button class="btn btn-link btn-sm text-light" (click)="openSystemPrompt()" title="System Prompt">
+        <i class="bi bi-terminal"></i> 
+        <span class="btn-text d-none d-md-inline">System Prompt</span>
+      </button>
+      
+      <div class="appearance-container">
+        <button class="btn btn-link btn-sm text-light" 
+                (click)="toggleAppearance($event)" 
+                title="Appearance">
+          <i class="bi bi-palette"></i> 
+          <span class="btn-text d-none d-md-inline">Appearance</span>
+        </button>
+        
+        @if (showAppearancePopover) {
+          <div class="appearance-popover-wrapper">
+            <app-appearance-popover 
+              [onClose]="onAppearancePopoverClose.bind(this)">
+            </app-appearance-popover>
+          </div>
+        }
+      </div>
+      
+      <button class="btn btn-link btn-sm text-light" (click)="clearAll()" title="Clear All">
+        <i class="bi bi-trash"></i> 
+        <span class="btn-text d-none d-md-inline">Clear All</span>
+      </button>
+      <button class="btn btn-link btn-sm text-light" (click)="duplicate()" title="Duplicate">
+        <i class="bi bi-files"></i> 
+        <span class="btn-text d-none d-md-inline">Duplicate</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="main-container">
+    <!-- Left Sidebar -->
+    <nav class="sidebar">
+      <div class="sidebar-nav">
+        <div class="nav-item" 
+             *ngFor="let item of navItems" 
+             [title]="item.tooltip">
+          <a [routerLink]="item.route" 
+             routerLinkActive="active" 
+             class="nav-link">
+            <i [class]="item.icon"></i>
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="content">
+      <div class="content-wrapper">
+        <router-outlet></router-outlet>
+      </div>
+    </main>
+  </div>
+
+  <!-- Status Bar -->
+  <footer class="status-bar">
+    <div class="status-left">
+      <small>
+        <i class="bi bi-circle-fill text-success me-1"></i>
+        ISP Manager 1.0.0 (Build 1) © 2025 Your Company Name
+      </small>
+    </div>
+    <div class="status-center">
+      <!-- Empty -->
+    </div>
+    <div class="status-right">
+      <button class="btn btn-link btn-sm settings-btn" 
+              (click)="openSettings()" 
+              title="Settings">
+        <i class="bi bi-gear"></i>
+      </button>
+    </div>
+  </footer>
+</div>
