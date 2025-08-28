@@ -1,0 +1,9 @@
+{
+  "run": {
+    "command": "nx serve angular-app --hmr",
+    "startTime": "2025-08-28T08:46:21.022Z",
+    "endTime": "2025-08-28T08:46:21.551Z",
+    "inner": false
+  },
+  "tasks": []
+}

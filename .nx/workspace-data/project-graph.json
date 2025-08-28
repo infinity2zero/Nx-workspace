@@ -1,0 +1,842 @@
+{
+  "nodes": {
+    "angular-app-e2e": {
+      "name": "angular-app-e2e",
+      "type": "e2e",
+      "data": {
+        "root": "apps/angular-app-e2e",
+        "metadata": {
+          "targetGroups": {
+            "E2E (CI)": [
+              "e2e-ci--src/example.spec.ts",
+              "e2e-ci"
+            ]
+          }
+        },
+        "targets": {
+          "e2e": {
+            "options": {
+              "cwd": "apps/angular-app-e2e",
+              "command": "playwright test"
+            },
+            "metadata": {
+              "technologies": [
+                "playwright"
+              ],
+              "description": "Runs Playwright Tests",
+              "help": {
+                "command": "npx playwright test --help",
+                "example": {
+                  "options": {
+                    "workers": 1
+                  }
+                }
+              }
+            },
+            "dependsOn": [
+              {
+                "projects": [
+                  "angular-app"
+                ],
+                "target": "serve"
+              }
+            ],
+            "cache": true,
+            "inputs": [
+              "default",
+              "^production",
+              {
+                "externalDependencies": [
+                  "@playwright/test"
+                ]
+              }
+            ],
+            "outputs": [
+              "{workspaceRoot}/dist/.playwright/apps/angular-app-e2e/test-output",
+              "{workspaceRoot}/dist/.playwright/apps/angular-app-e2e/playwright-report"
+            ],
+            "executor": "nx:run-commands",
+            "configurations": {},
+            "parallelism": true
+          },
+          "e2e-ci--src/example.spec.ts": {
+            "options": {
+              "cwd": "apps/angular-app-e2e",
+              "env": {
+                "PLAYWRIGHT_HTML_OUTPUT_DIR": "../../dist/.playwright/apps/angular-app-e2e/playwright-report/src-example-spec-ts",
+                "PLAYWRIGHT_HTML_REPORT": "../../dist/.playwright/apps/angular-app-e2e/playwright-report/src-example-spec-ts"
+              },
+              "command": "playwright test src/example.spec.ts --output=../../dist/.playwright/apps/angular-app-e2e/test-output/src-example-spec-ts"
+            },
+            "metadata": {
+              "technologies": [
+                "playwright"
+              ],
+              "description": "Runs Playwright Tests in src/example.spec.ts in CI",
+              "help": {
+                "command": "npx playwright test --help",
+                "example": {
+                  "options": {
+                    "workers": 1
+                  }
+                }
+              }
+            },
+            "dependsOn": [
+              {
+                "projects": [
+                  "angular-app"
+                ],
+                "target": "serve"
+              }
+            ],
+            "cache": true,
+            "inputs": [
+              "default",
+              "^production",
+              {
+                "externalDependencies": [
+                  "@playwright/test"
+                ]
+              }
+            ],
+            "outputs": [
+              "{workspaceRoot}/dist/.playwright/apps/angular-app-e2e/test-output/src-example-spec-ts",
+              "{workspaceRoot}/dist/.playwright/apps/angular-app-e2e/playwright-report/src-example-spec-ts"
+            ],
+            "executor": "nx:run-commands",
+            "configurations": {},
+            "parallelism": true
+          },
+          "e2e-ci": {
+            "executor": "nx:noop",
+            "cache": true,
+            "inputs": [
+              "default",
+              "^production",
+              {
+                "externalDependencies": [
+                  "@playwright/test"
+                ]
+              }
+            ],
+            "outputs": [
+              "{workspaceRoot}/dist/.playwright/apps/angular-app-e2e/test-output",
+              "{workspaceRoot}/dist/.playwright/apps/angular-app-e2e/playwright-report"
+            ],
+            "dependsOn": [
+              {
+                "target": "e2e-ci--src/example.spec.ts",
+                "projects": "self",
+                "params": "forward"
+              }
+            ],
+            "metadata": {
+              "technologies": [
+                "playwright"
+              ],
+              "description": "Runs Playwright Tests in CI",
+              "nonAtomizedTarget": "e2e",
+              "help": {
+                "command": "npx playwright test --help",
+                "example": {
+                  "options": {
+                    "workers": 1
+                  }
+                }
+              }
+            },
+            "configurations": {},
+            "options": {},
+            "parallelism": true
+          },
+          "lint": {
+            "cache": true,
+            "options": {
+              "cwd": "apps/angular-app-e2e",
+              "command": "eslint ."
+            },
+            "inputs": [
+              "default",
+              "^default",
+              "{workspaceRoot}/eslint.config.mjs",
+              "{workspaceRoot}/apps/angular-app-e2e/eslint.config.mjs",
+              "{workspaceRoot}/tools/eslint-rules/**/*",
+              {
+                "externalDependencies": [
+                  "eslint"
+                ]
+              }
+            ],
+            "outputs": [
+              "{options.outputFile}"
+            ],
+            "metadata": {
+              "technologies": [
+                "eslint"
+              ],
+              "description": "Runs ESLint on project",
+              "help": {
+                "command": "npx eslint --help",
+                "example": {
+                  "options": {
+                    "max-warnings": 0
+                  }
+                }
+              }
+            },
+            "executor": "nx:run-commands",
+            "configurations": {},
+            "parallelism": true
+          }
+        },
+        "name": "angular-app-e2e",
+        "$schema": "../../node_modules/nx/schemas/project-schema.json",
+        "projectType": "application",
+        "sourceRoot": "apps/angular-app-e2e/src",
+        "implicitDependencies": [
+          "angular-app"
+        ],
+        "tags": []
+      }
+    },
+    "api-server-e2e": {
+      "name": "api-server-e2e",
+      "type": "e2e",
+      "data": {
+        "root": "apps/api-server-e2e",
+        "targets": {
+          "lint": {
+            "cache": true,
+            "options": {
+              "cwd": "apps/api-server-e2e",
+              "command": "eslint ."
+            },
+            "inputs": [
+              "default",
+              "^default",
+              "{workspaceRoot}/eslint.config.mjs",
+              "{workspaceRoot}/tools/eslint-rules/**/*",
+              {
+                "externalDependencies": [
+                  "eslint"
+                ]
+              }
+            ],
+            "outputs": [
+              "{options.outputFile}"
+            ],
+            "metadata": {
+              "technologies": [
+                "eslint"
+              ],
+              "description": "Runs ESLint on project",
+              "help": {
+                "command": "npx eslint --help",
+                "example": {
+                  "options": {
+                    "max-warnings": 0
+                  }
+                }
+              }
+            },
+            "executor": "nx:run-commands",
+            "configurations": {},
+            "parallelism": true
+          },
+          "e2e": {
+            "executor": "@nx/jest:jest",
+            "outputs": [
+              "{workspaceRoot}/coverage/{e2eProjectRoot}"
+            ],
+            "options": {
+              "jestConfig": "apps/api-server-e2e/jest.config.ts",
+              "passWithNoTests": true
+            },
+            "dependsOn": [
+              "api-server:build",
+              "api-server:serve"
+            ],
+            "configurations": {
+              "ci": {
+                "ci": true,
+                "codeCoverage": true
+              }
+            },
+            "parallelism": true,
+            "cache": true,
+            "inputs": [
+              "default",
+              "^production",
+              "{workspaceRoot}/jest.preset.js"
+            ]
+          }
+        },
+        "name": "api-server-e2e",
+        "$schema": "../../node_modules/nx/schemas/project-schema.json",
+        "projectType": "application",
+        "implicitDependencies": [
+          "api-server"
+        ],
+        "tags": []
+      }
+    },
+    "electron-app": {
+      "name": "electron-app",
+      "type": "app",
+      "data": {
+        "root": "apps/electron-app",
+        "targets": {
+          "lint": {
+            "cache": true,
+            "options": {
+              "cwd": "apps/electron-app",
+              "command": "eslint ."
+            },
+            "inputs": [
+              "default",
+              "^default",
+              "{workspaceRoot}/eslint.config.mjs",
+              "{workspaceRoot}/apps/electron-app/eslint.config.mjs",
+              "{workspaceRoot}/tools/eslint-rules/**/*",
+              {
+                "externalDependencies": [
+                  "eslint"
+                ]
+              }
+            ],
+            "outputs": [
+              "{options.outputFile}"
+            ],
+            "metadata": {
+              "technologies": [
+                "eslint"
+              ],
+              "description": "Runs ESLint on project",
+              "help": {
+                "command": "npx eslint --help",
+                "example": {
+                  "options": {
+                    "max-warnings": 0
+                  }
+                }
+              }
+            },
+            "executor": "nx:run-commands",
+            "configurations": {},
+            "parallelism": true
+          },
+          "build": {
+            "asar": true,
+            "executor": "nx-electron:build",
+            "outputs": [
+              "{options.outputPath}"
+            ],
+            "options": {
+              "outputPath": "dist/apps/electron-app",
+              "main": "apps/electron-app/src/main.ts",
+              "tsConfig": "apps/electron-app/tsconfig.app.json",
+              "assets": [
+                "apps/electron-app/src/assets"
+              ]
+            },
+            "configurations": {
+              "production": {
+                "optimization": true,
+                "extractLicenses": true,
+                "fileReplacements": [
+                  {
+                    "replace": "apps/electron-app/src/environments/environment.ts",
+                    "with": "apps/electron-app/src/environments/environment.prod.ts"
+                  }
+                ]
+              }
+            },
+            "parallelism": true
+          },
+          "serve": {
+            "executor": "nx-electron:execute",
+            "options": {
+              "buildTarget": "electron-app:build"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "package": {
+            "executor": "nx-electron:package",
+            "options": {
+              "name": "electron-app",
+              "frontendProject": "angular-app",
+              "sourcePath": "dist/apps",
+              "outputPath": "dist/packages",
+              "extraResources": [
+                {
+                  "from": "dist/api-server",
+                  "to": "api-server"
+                },
+                {
+                  "from": "node_modules/better-sqlite3",
+                  "to": "node_modules/better-sqlite3"
+                },
+                {
+                  "from": "node_modules/bindings",
+                  "to": "node_modules/bindings"
+                },
+                {
+                  "from": "node_modules/call-bind-apply-helpers",
+                  "to": "node_modules/call-bind-apply-helpers"
+                },
+                {
+                  "from": "db/",
+                  "to": "db"
+                },
+                {
+                  "from": "./resources/",
+                  "to": "resources"
+                }
+              ]
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "make": {
+            "executor": "nx-electron:make",
+            "options": {
+              "name": "electron-app",
+              "frontendProject": "angular-app",
+              "sourcePath": "dist/apps",
+              "outputPath": "dist/executables",
+              "extraResources": [
+                {
+                  "from": "dist/api-server",
+                  "to": "api-server"
+                },
+                {
+                  "from": "node_modules/better-sqlite3",
+                  "to": "node_modules/better-sqlite3"
+                },
+                {
+                  "from": "node_modules/bindings",
+                  "to": "node_modules/bindings"
+                },
+                {
+                  "from": "node_modules/call-bind-apply-helpers",
+                  "to": "node_modules/call-bind-apply-helpers"
+                },
+                {
+                  "from": "db/network.sqlite",
+                  "to": "db"
+                },
+                {
+                  "from": "./resources/",
+                  "to": "resources"
+                }
+              ]
+            },
+            "configurations": {},
+            "parallelism": true
+          }
+        },
+        "name": "electron-app",
+        "$schema": "../../node_modules/nx/schemas/project-schema.json",
+        "sourceRoot": "apps/electron-app/src",
+        "projectType": "application",
+        "implicitDependencies": [],
+        "tags": []
+      }
+    },
+    "angular-app": {
+      "name": "angular-app",
+      "type": "app",
+      "data": {
+        "root": "apps/angular-app",
+        "targets": {
+          "lint": {
+            "executor": "@nx/eslint:lint",
+            "options": {},
+            "configurations": {},
+            "parallelism": true,
+            "cache": true,
+            "inputs": [
+              "default",
+              "{workspaceRoot}/.eslintrc.json",
+              "{workspaceRoot}/.eslintignore",
+              "{workspaceRoot}/eslint.config.mjs"
+            ]
+          },
+          "build": {
+            "executor": "@angular-devkit/build-angular:browser",
+            "outputs": [
+              "{options.outputPath}"
+            ],
+            "options": {
+              "outputPath": "dist/apps/angular-app",
+              "index": "apps/angular-app/src/index.html",
+              "main": "apps/angular-app/src/main.ts",
+              "polyfills": [
+                "zone.js",
+                "@angular/localize/init"
+              ],
+              "tsConfig": "apps/angular-app/tsconfig.app.json",
+              "inlineStyleLanguage": "scss",
+              "assets": [
+                {
+                  "glob": "**/*",
+                  "input": "apps/angular-app/public"
+                }
+              ],
+              "styles": [
+                "apps/angular-app/src/styles.scss"
+              ]
+            },
+            "configurations": {
+              "production": {
+                "baseHref": "./",
+                "budgets": [
+                  {
+                    "type": "initial",
+                    "maximumWarning": "500kb",
+                    "maximumError": "1mb"
+                  },
+                  {
+                    "type": "anyComponentStyle",
+                    "maximumWarning": "4kb",
+                    "maximumError": "8kb"
+                  }
+                ],
+                "outputHashing": "all"
+              },
+              "development": {
+                "buildOptimizer": false,
+                "optimization": false,
+                "vendorChunk": true,
+                "extractLicenses": false,
+                "sourceMap": true,
+                "namedChunks": true
+              }
+            },
+            "defaultConfiguration": "production",
+            "parallelism": true,
+            "cache": true,
+            "dependsOn": [
+              "^build"
+            ],
+            "inputs": [
+              "production",
+              "^production"
+            ]
+          },
+          "serve": {
+            "continuous": true,
+            "executor": "@angular-devkit/build-angular:dev-server",
+            "configurations": {
+              "production": {
+                "buildTarget": "angular-app:build:production"
+              },
+              "development": {
+                "buildTarget": "angular-app:build:development"
+              }
+            },
+            "defaultConfiguration": "development",
+            "options": {
+              "proxyConfig": "apps/angular-app/proxy.conf.json"
+            },
+            "parallelism": true
+          },
+          "extract-i18n": {
+            "executor": "@angular-devkit/build-angular:extract-i18n",
+            "options": {
+              "buildTarget": "angular-app:build"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "test": {
+            "executor": "@nx/vite:test",
+            "outputs": [
+              "{options.reportsDirectory}"
+            ],
+            "options": {
+              "reportsDirectory": "../../coverage/apps/angular-app"
+            },
+            "configurations": {},
+            "parallelism": true,
+            "cache": true,
+            "inputs": [
+              "default",
+              "^production"
+            ]
+          },
+          "serve-static": {
+            "continuous": true,
+            "executor": "@nx/web:file-server",
+            "options": {
+              "buildTarget": "angular-app:build",
+              "port": 4200,
+              "spa": true
+            },
+            "configurations": {},
+            "parallelism": true
+          }
+        },
+        "name": "angular-app",
+        "$schema": "../../node_modules/nx/schemas/project-schema.json",
+        "projectType": "application",
+        "prefix": "app",
+        "sourceRoot": "apps/angular-app/src",
+        "tags": [],
+        "implicitDependencies": []
+      }
+    },
+    "api-server": {
+      "name": "api-server",
+      "type": "app",
+      "data": {
+        "root": "apps/api-server",
+        "targets": {
+          "lint": {
+            "cache": true,
+            "options": {
+              "cwd": "apps/api-server",
+              "command": "eslint ."
+            },
+            "inputs": [
+              "default",
+              "^default",
+              "{workspaceRoot}/eslint.config.mjs",
+              "{workspaceRoot}/tools/eslint-rules/**/*",
+              {
+                "externalDependencies": [
+                  "eslint"
+                ]
+              }
+            ],
+            "outputs": [
+              "{options.outputFile}"
+            ],
+            "metadata": {
+              "technologies": [
+                "eslint"
+              ],
+              "description": "Runs ESLint on project",
+              "help": {
+                "command": "npx eslint --help",
+                "example": {
+                  "options": {
+                    "max-warnings": 0
+                  }
+                }
+              }
+            },
+            "executor": "nx:run-commands",
+            "configurations": {},
+            "parallelism": true
+          },
+          "build": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "npx webpack-cli build",
+              "args": [
+                "--node-env=production"
+              ],
+              "cwd": "apps/api-server"
+            },
+            "configurations": {
+              "development": {
+                "args": [
+                  "--node-env=development"
+                ]
+              }
+            },
+            "parallelism": true
+          },
+          "serve": {
+            "continuous": true,
+            "executor": "@nx/js:node",
+            "defaultConfiguration": "development",
+            "dependsOn": [
+              "build"
+            ],
+            "options": {
+              "buildTarget": "api-server:build",
+              "runBuildTargetDependencies": false
+            },
+            "configurations": {
+              "development": {
+                "buildTarget": "api-server:build:development"
+              },
+              "production": {
+                "buildTarget": "api-server:build:production"
+              }
+            },
+            "parallelism": true
+          },
+          "preview": {
+            "continuous": true,
+            "options": {
+              "cwd": "apps/api-server",
+              "args": [
+                "--node-env=production"
+              ],
+              "command": "webpack-cli serve"
+            },
+            "metadata": {
+              "technologies": [
+                "webpack"
+              ],
+              "description": "Starts Webpack dev server in production mode",
+              "help": {
+                "command": "npx webpack-cli serve --help",
+                "example": {
+                  "options": {
+                    "args": [
+                      "--client-progress",
+                      "--history-api-fallback "
+                    ]
+                  }
+                }
+              }
+            },
+            "executor": "nx:run-commands",
+            "configurations": {},
+            "parallelism": true
+          },
+          "serve-static": {
+            "continuous": true,
+            "dependsOn": [
+              "build"
+            ],
+            "executor": "@nx/web:file-server",
+            "options": {
+              "buildTarget": "build",
+              "spa": true
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "build-deps": {
+            "dependsOn": [
+              "^build"
+            ],
+            "configurations": {},
+            "options": {},
+            "parallelism": true,
+            "executor": "nx:noop"
+          },
+          "watch-deps": {
+            "continuous": true,
+            "dependsOn": [
+              "build-deps"
+            ],
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "npx nx watch --projects api-server --includeDependentProjects -- npx nx build-deps api-server"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "prune-lockfile": {
+            "dependsOn": [
+              "build"
+            ],
+            "cache": true,
+            "executor": "@nx/js:prune-lockfile",
+            "outputs": [
+              "{workspaceRoot}/dist/apps/api-server/package.json",
+              "{workspaceRoot}/dist/apps/api-server/package-lock.json"
+            ],
+            "options": {
+              "buildTarget": "build"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "copy-workspace-modules": {
+            "dependsOn": [
+              "build"
+            ],
+            "cache": true,
+            "outputs": [
+              "{workspaceRoot}/dist/apps/api-server/workspace_modules"
+            ],
+            "executor": "@nx/js:copy-workspace-modules",
+            "options": {
+              "buildTarget": "build"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "prune": {
+            "dependsOn": [
+              "prune-lockfile",
+              "copy-workspace-modules"
+            ],
+            "executor": "nx:noop",
+            "configurations": {},
+            "options": {},
+            "parallelism": true
+          },
+          "test": {
+            "executor": "@nx/jest:jest",
+            "outputs": [
+              "{workspaceRoot}/coverage/{projectRoot}"
+            ],
+            "options": {
+              "jestConfig": "apps/api-server/jest.config.ts",
+              "passWithNoTests": true
+            },
+            "configurations": {
+              "ci": {
+                "ci": true,
+                "codeCoverage": true
+              }
+            },
+            "parallelism": true,
+            "cache": true,
+            "inputs": [
+              "default",
+              "^production",
+              "{workspaceRoot}/jest.preset.js"
+            ]
+          }
+        },
+        "projectType": "application",
+        "metadata": {},
+        "name": "api-server",
+        "$schema": "../../node_modules/nx/schemas/project-schema.json",
+        "sourceRoot": "apps/api-server/src",
+        "tags": [],
+        "implicitDependencies": []
+      }
+    }
+  },
+  "externalNodes": {},
+  "dependencies": {
+    "angular-app-e2e": [
+      {
+        "source": "angular-app-e2e",
+        "target": "angular-app",
+        "type": "implicit"
+      }
+    ],
+    "api-server-e2e": [
+      {
+        "source": "api-server-e2e",
+        "target": "api-server",
+        "type": "implicit"
+      }
+    ],
+    "electron-app": [
+      {
+        "source": "electron-app",
+        "target": "api-server",
+        "type": "dynamic"
+      }
+    ],
+    "angular-app": [],
+    "api-server": []
+  },
+  "version": "6.0",
+  "errors": [],
+  "computedAt": 1756371240622
+}

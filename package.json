@@ -144,5 +144,8 @@
     "vitest": "^3.0.0",
     "wait-on": "^8.0.4",
     "webpack-cli": "^5.1.4"
-  }
+  },
+  "overrides": {
+  "ora": "5.4.1"
+ }
 }
